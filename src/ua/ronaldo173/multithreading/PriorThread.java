@@ -5,10 +5,14 @@ public class PriorThread extends Thread {
 		super(name);
 	}
 
+	public PriorThread(ThreadGroup tg, String name) {
+		super(tg, name);
+	}
+
 	@Override
 	public void run() {
 		for (int i = 0; i < 30; i++) {
-			System.out.println(getName() + " " + i);
+			System.out.println(getPriority() + " " + getName() + " " + i + ".." + getThreadGroup());
 
 			try {
 				Thread.sleep(1);
@@ -21,14 +25,17 @@ public class PriorThread extends Thread {
 
 class Runner {
 	public static void main(String[] args) {
-		PriorThread min = new PriorThread("min");
-		PriorThread max = new PriorThread("max");
-		PriorThread norm = new PriorThread("norm");
+		ThreadGroup tg = new ThreadGroup("My group1");
+
+		PriorThread min = new PriorThread(tg, "min");
+		PriorThread max = new PriorThread(tg, "max");
+		PriorThread norm = new PriorThread(tg, "norm");
 
 		min.setPriority(Thread.MIN_PRIORITY);
 		max.setPriority(Thread.MAX_PRIORITY);
 		norm.setPriority(Thread.NORM_PRIORITY);
 
+		tg.setMaxPriority(6);
 		min.start();
 		norm.start();
 		max.start();
